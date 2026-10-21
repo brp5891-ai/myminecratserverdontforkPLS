@@ -1,0 +1,13 @@
+{
+  "name": "minecraft-host-panel",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Local Minecraft server control panel",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

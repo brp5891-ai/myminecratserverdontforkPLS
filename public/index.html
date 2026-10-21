@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17251d">
+  <title>Blockhost — панель сервера Minecraft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#overview" aria-label="Blockhost, обзор">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span class="brand-copy"><strong>blockhost</strong><small>SERVER CONSOLE</small></span>
+      </a>
+
+      <div class="side-label">ПРОЕКТ</div>
+      <button class="server-select" type="button" data-nav="overview">
+        <span class="server-avatar">M</span>
+        <span class="server-select-copy"><strong id="sidebar-name">Мой сервер</strong><small id="sidebar-version">Загрузка...</small></span>
+        <span class="select-caret">⌄</span>
+      </button>
+
+      <div class="side-label nav-label">УПРАВЛЕНИЕ</div>
+      <nav class="nav-list" aria-label="Управление сервером">
+        <button class="nav-item active" type="button" data-nav="overview"><span class="nav-icon">⌂</span><span>Обзор</span><span class="nav-arrow">↗</span></button>
+        <button class="nav-item" type="button" data-nav="setup"><span class="nav-icon">◈</span><span>Ядро и версия</span></button>
+        <button class="nav-item" type="button" data-nav="addons"><span class="nav-icon">▤</span><span>Плагины и моды</span><span class="nav-count" id="addon-count">0</span></button>
+        <button class="nav-item" type="button" data-nav="settings"><span class="nav-icon">⚙</span><span>Настройки</span></button>
+        <button class="nav-item" type="button" data-nav="console"><span class="nav-icon">›_</span><span>Консоль</span><span class="live-dot" id="console-indicator"></span></button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="local-card"><span class="local-pulse"></span><div><strong>Локальный хост</strong><small>Данные остаются на этом ПК</small></div></div>
+        <div class="sidebar-footer"><span>BLOCKHOST <span id="app-version">1.0.0</span></span><span class="footer-mark">BH_01</span></div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div class="breadcrumb"><span>МОЙ СЕРВЕР</span><b>/</b><strong id="page-breadcrumb">ОБЗОР</strong></div>
+        <div class="topbar-right"><span class="local-indicator"><span></span> LOCAL INSTANCE</span><span class="topbar-divider"></span><span class="topbar-date" id="clock">--:--</span></div>
+      </header>
+
+      <section class="view active" id="view-overview" data-view="overview">
+        <div class="page-heading overview-heading">
+          <div><div class="eyebrow"><span class="eyebrow-line"></span> CONTROL ROOM <span class="eyebrow-index">01 / 05</span></div><h1>Добро пожаловать,<br><span id="welcome-name">Мой сервер</span></h1><p class="heading-subtitle">Состояние мира и все важные действия в одном месте.</p></div>
+          <div class="heading-actions"><button class="button button-quiet" type="button" data-nav="settings"><span>⚙</span> Настройки</button><button class="button button-primary" id="main-power" type="button"><span class="power-glyph">▶</span><span id="main-power-label">Запустить сервер</span></button></div>
+        </div>
+
+        <div class="server-hero">
+          <div class="hero-grain"></div><div class="hero-grid"></div>
+          <div class="hero-copy"><div class="hero-kicker"><span class="hero-kicker-dot"></span> ТВОЙ МИР, ТВОИ ПРАВИЛА</div><h2 id="hero-name">Мой сервер</h2><p><span id="hero-core">PAPER</span><i></i><span>MINECRAFT <b id="hero-version">1.21.4</b></span><i></i><span>JAVA EDITION</span></p></div>
+          <div class="hero-art" aria-hidden="true"><div class="pixel-shadow"></div><div class="pixel-cube"><div class="cube-top"></div><div class="cube-left"></div><div class="cube-right"></div></div><span class="pixel-spark spark-one">✳</span><span class="pixel-spark spark-two">+</span><span class="pixel-code">WORLD<br>01</span></div>
+          <div class="hero-edge"><span>BH / INSTANCE 001</span><span>◫ &nbsp; JAVA PROCESS</span></div>
+        </div>
+
+        <div class="section-heading"><div><div class="eyebrow">СЕЙЧАС</div><h2>Показатели сервера</h2></div><span class="updated-label"><span class="refresh-dot"></span> ОБНОВЛЯЕТСЯ АВТОМАТИЧЕСКИ</span></div>
+        <div class="stat-grid">
+          <article class="stat-card status-stat"><div class="stat-top"><span>СОСТОЯНИЕ</span><span class="stat-symbol">◉</span></div><div class="status-line"><span class="status-indicator" id="status-indicator"></span><strong id="server-status">Остановлен</strong></div><p id="status-note">Готов к запуску</p><div class="stat-bottom"><span class="mono" id="server-pid">PROCESS / —</span><span class="status-mini" id="server-status-chip">OFFLINE</span></div></article>
+          <article class="stat-card"><div class="stat-top"><span>ПАМЯТЬ JAVA</span><span class="stat-symbol memory-symbol">▥</span></div><div class="stat-value"><strong id="memory-value">2–4</strong><span>ГБ</span></div><p>Выделено процессу сервера</p><div class="stat-bottom"><span class="mono">HEAP ALLOCATION</span><span class="stat-accent"></span></div></article>
+          <article class="stat-card"><div class="stat-top"><span>ДОПОЛНЕНИЯ</span><span class="stat-symbol addon-symbol">▤</span></div><div class="stat-value"><strong id="addon-total">0</strong><span>ФАЙЛОВ</span></div><p><span id="plugin-total">0</span> плагинов · <span id="mod-total">0</span> модов</p><div class="stat-bottom"><span class="mono">PLUGINS + MODS</span><button class="text-link" type="button" data-nav="addons">Открыть →</button></div></article>
+          <article class="stat-card"><div class="stat-top"><span>ВЕРСИЯ ИГРЫ</span><span class="stat-symbol version-symbol">◷</span></div><div class="stat-value"><strong class="version-number" id="version-value">1.21.4</strong></div><p id="core-note">Ядро не установлено</p><div class="stat-bottom"><span class="mono" id="core-status-label">CORE / MISSING</span><button class="text-link" type="button" data-nav="setup">Настроить →</button></div></article>
+        </div>
+
+        <div class="overview-lower">
+          <section class="panel quick-panel"><div class="panel-heading"><div><div class="eyebrow">БЫСТРОЕ ДЕЙСТВИЕ</div><h2>К серверу</h2></div><span class="panel-index">01—A</span></div><div class="quick-actions"><button class="quick-action" type="button" data-nav="setup"><span class="quick-icon lime">◈</span><span><strong>Выбрать ядро</strong><small>Paper, Purpur, Fabric или своё</small></span><span class="quick-arrow">↗</span></button><button class="quick-action" type="button" data-nav="addons"><span class="quick-icon orange">＋</span><span><strong>Добавить контент</strong><small>Найти плагины и моды</small></span><span class="quick-arrow">↗</span></button><button class="quick-action" type="button" data-nav="console"><span class="quick-icon dark">›_</span><span><strong>Открыть консоль</strong><small>Команды и журнал запуска</small></span><span class="quick-arrow">↗</span></button></div></section>
+          <section class="panel activity-panel"><div class="panel-heading"><div><div class="eyebrow">ПОСЛЕДНИЕ СОБЫТИЯ</div><h2>Журнал</h2></div><button class="text-link" type="button" data-nav="console">Весь лог →</button></div><div class="activity-list" id="activity-list"><div class="empty-inline"><span>◌</span><p>Здесь появятся действия с сервером.</p></div></div></section>
+        </div>
+        <footer class="page-footer"><span>BLOCKHOST LOCAL PANEL</span><span>ПАНЕЛЬ УПРАВЛЕНИЯ MINECRAFT</span><span>01 / 05</span></footer>
+      </section>
+
+      <section class="view" id="view-setup" data-view="setup">
+        <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> УСТАНОВКА <span class="eyebrow-index">02 / 05</span></div><h1>Ядро и версия</h1><p class="heading-subtitle">Скачай сборку или загрузи собственный JAR-файл.</p></div><div class="heading-actions"><span class="setup-status" id="setup-status"><span></span> НЕТ ЯДРА</span></div></div>
+        <div class="setup-layout">
+          <section class="panel setup-panel"><div class="panel-heading"><div><div class="eyebrow">01 / ИСТОЧНИК</div><h2>Выбери ядро</h2></div><span class="panel-index">CORE SELECT</span></div>
+            <div class="core-options" role="group" aria-label="Источник ядра">
+              <button class="core-option selected" type="button" data-core="paper"><span class="core-letter">P</span><span><strong>Paper</strong><small>Плагины · высокая производительность</small></span><span class="radio-mark"></span></button>
+              <button class="core-option" type="button" data-core="purpur"><span class="core-letter purpur-letter">Pu</span><span><strong>Purpur</strong><small>Плагины · больше настроек</small></span><span class="radio-mark"></span></button>
+              <button class="core-option" type="button" data-core="fabric"><span class="core-letter fabric-letter">F</span><span><strong>Fabric</strong><small>Моды · лёгкий загрузчик</small></span><span class="radio-mark"></span></button>
+            </div>
+            <div class="version-row"><label class="field"><span>ВЕРСИЯ MINECRAFT</span><select id="core-version"><option value="1.21.4">1.21.4</option></select></label><button class="button button-outline" id="refresh-versions" type="button" title="Обновить список версий">↻</button></div>
+            <button class="button button-primary wide-button" id="install-core" type="button"><span>↓</span> Скачать и установить ядро</button>
+            <p class="form-note"><span class="note-mark">i</span> Будет скачана последняя стабильная сборка выбранного источника. Установка заменит текущий <code>server.jar</code>.</p>
+          </section>
+          <section class="panel upload-panel"><div class="panel-heading"><div><div class="eyebrow">02 / СВОЙ ФАЙЛ</div><h2>Загрузить ядро</h2></div><span class="panel-index">CUSTOM JAR</span></div>
+            <label class="drop-zone" for="core-file"><span class="drop-icon">↑</span><strong>Перетащи JAR сюда</strong><span>или нажми, чтобы выбрать файл</span><small>JAVA ARCHIVE · МАКС. 512 МБ</small><input id="core-file" type="file" accept=".jar,application/java-archive"></label>
+            <div class="file-status" id="core-file-status"><span class="file-status-icon">◈</span><span><strong id="core-file-name">server.jar</strong><small id="core-file-meta">Ядро сервера</small></span><span class="file-status-state" id="core-file-state">НЕ УСТАНОВЛЕНО</span></div>
+          </section>
+          <section class="panel setup-info"><div class="info-emblem">BH<span>+</span></div><div><div class="eyebrow">СОВМЕСТИМОСТЬ</div><h3 id="compat-title">Paper / Purpur</h3><p id="compat-copy">Поддержка Bukkit и Spigot-плагинов. Выбери одну из этих сборок для установки плагинов.</p></div><span class="info-corner">↗</span></section>
+        </div>
+        <footer class="page-footer"><span>CORE MANAGER</span><span>ЗАГРУЗКИ ИЗ ОФИЦИАЛЬНЫХ ИСТОЧНИКОВ</span><span>02 / 05</span></footer>
+      </section>
+
+      <section class="view" id="view-addons" data-view="addons">
+        <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> КОНТЕНТ <span class="eyebrow-index">03 / 05</span></div><h1>Плагины и моды</h1><p class="heading-subtitle">Установленные файлы и поиск по каталогам сообщества.</p></div><button class="button button-primary" id="open-addon-search" type="button"><span>＋</span> Найти дополнение</button></div>
+        <div class="addon-toolbar"><div class="segment-control" role="tablist" aria-label="Тип дополнений"><button class="segment active" type="button" data-filter="all" role="tab">Все <span id="filter-all-count">0</span></button><button class="segment" type="button" data-filter="plugins" role="tab">Плагины <span id="filter-plugin-count">0</span></button><button class="segment" type="button" data-filter="mods" role="tab">Моды <span id="filter-mod-count">0</span></button></div><label class="upload-quick"><span>↑</span> Загрузить JAR<input id="addon-file" type="file" accept=".jar,application/java-archive"></label></div>
+        <div class="addon-list panel" id="addon-list"><div class="empty-state"><span class="empty-symbol">▤</span><h3>Пока чистый лист</h3><p>Добавь первый плагин или мод из каталога<br>либо загрузи свой файл.</p><button class="button button-outline" type="button" id="empty-search">Открыть каталог ↗</button></div></div>
+        <div class="source-strip"><div class="source-label"><span class="eyebrow">ИСТОЧНИКИ</span><strong>Каталоги дополнений</strong></div><div class="source-badge modrinth-badge"><span class="modrinth-mark">M</span><span><strong>Modrinth</strong><small>Доступен без ключа</small></span><span class="source-check">●</span></div><div class="source-badge curse-badge"><span class="curse-mark">C</span><span><strong>CurseForge</strong><small>Требуется API-ключ</small></span><span class="source-lock">⌑</span></div></div>
+        <footer class="page-footer"><span>ADDON LIBRARY</span><span>ПЕРЕД УСТАНОВКОЙ ОСТАНОВИ СЕРВЕР</span><span>03 / 05</span></footer>
+      </section>
+
+      <section class="view" id="view-settings" data-view="settings">
+        <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> КОНФИГУРАЦИЯ <span class="eyebrow-index">04 / 05</span></div><h1>Настройки</h1><p class="heading-subtitle">Параметры применятся при следующем запуске сервера.</p></div><button class="button button-primary" id="save-settings-top" type="button"><span>↓</span> Сохранить изменения</button></div>
+        <form id="settings-form" class="settings-layout">
+          <input type="hidden" name="optimization" value="balanced">
+          <section class="panel settings-panel"><div class="panel-heading"><div><div class="eyebrow">01 / ИНСТАНС</div><h2>Основные</h2></div><span class="panel-index">IDENTITY</span></div><div class="field-grid">
+            <label class="field"><span>НАЗВАНИЕ СЕРВЕРА</span><input name="name" maxlength="80" required></label>
+            <label class="field"><span>ВЕРСИЯ MINECRAFT</span><input name="version" pattern="\d{1,2}\.\d{1,2}(\.\d{1,2})?" required></label>
+            <label class="field"><span>КОМАНДА JAVA</span><input name="java" maxlength="120" placeholder="java" required></label>
+            <label class="field"><span>ПОРТ СЕРВЕРА</span><input name="port" type="number" min="1" max="65535" required></label>
+            <label class="field"><span>ПАМЯТЬ · МИНИМУМ, ГБ</span><input name="minMemory" type="number" min="1" max="256" required></label>
+            <label class="field"><span>ПАМЯТЬ · МАКСИМУМ, ГБ</span><input name="maxMemory" type="number" min="1" max="256" required></label>
+          </div></section>
+          <section class="panel settings-panel performance-panel"><div class="panel-heading"><div><div class="eyebrow">02 / PERFORMANCE</div><h2>Оптимизация</h2></div><span class="panel-index">JAVA + WORLD</span></div>
+            <div class="preset-control"><button class="preset-option" type="button" data-preset="quiet"><span class="preset-symbol">◌</span><span><strong>Лёгкий</strong><small>Экономия ресурсов</small></span></button><button class="preset-option selected" type="button" data-preset="balanced"><span class="preset-symbol">◒</span><span><strong>Баланс</strong><small>На каждый день</small></span></button><button class="preset-option" type="button" data-preset="performance"><span class="preset-symbol">◉</span><span><strong>Производительность</strong><small>Больше игроков</small></span></button></div>
+            <div class="field-grid compact-grid"><label class="field"><span>ДАЛЬНОСТЬ ПРОРИСОВКИ</span><div class="input-unit"><input name="viewDistance" type="number" min="2" max="32"><span>чанков</span></div></label><label class="field"><span>ДАЛЬНОСТЬ СИМУЛЯЦИИ</span><div class="input-unit"><input name="simulationDistance" type="number" min="2" max="32"><span>чанков</span></div></label></div>
+            <p class="form-note"><span class="note-mark">i</span> Профиль меняет дальность мира, радиус сущностей и целевое время паузы G1GC. Он не меняет настройки установленных плагинов.</p>
+          </section>
+          <section class="panel settings-panel"><div class="panel-heading"><div><div class="eyebrow">03 / WORLD</div><h2>Игровой мир</h2></div><span class="panel-index">PROPERTIES</span></div><div class="field-grid">
+            <label class="field field-span"><span>MOTD · СООБЩЕНИЕ В СПИСКЕ СЕРВЕРОВ</span><input name="motd" maxlength="120"></label>
+            <label class="field"><span>ЛИМИТ ИГРОКОВ</span><input name="maxPlayers" type="number" min="1" max="1000"></label>
+            <label class="field"><span>ИМЯ МИРА</span><input name="levelName" maxlength="64" required></label>
+            <label class="field"><span>СЛОЖНОСТЬ</span><select name="difficulty"><option value="peaceful">Мирная</option><option value="easy">Лёгкая</option><option value="normal">Обычная</option><option value="hard">Сложная</option></select></label>
+            <label class="field"><span>РЕЖИМ ИГРЫ</span><select name="gamemode"><option value="survival">Выживание</option><option value="creative">Творческий</option><option value="adventure">Приключение</option><option value="spectator">Наблюдатель</option></select></label>
+          </div><div class="toggle-list"><label class="toggle-row"><span><strong>Проверка лицензии</strong><small>Требовать авторизацию Minecraft</small></span><input name="onlineMode" type="checkbox"><span class="toggle-ui"></span></label><label class="toggle-row"><span><strong>Белый список</strong><small>Вход только для добавленных игроков</small></span><input name="whitelist" type="checkbox"><span class="toggle-ui"></span></label><label class="toggle-row"><span><strong>PvP</strong><small>Игроки могут сражаться друг с другом</small></span><input name="pvp" type="checkbox"><span class="toggle-ui"></span></label></div></section>
+          <section class="panel settings-panel"><div class="panel-heading"><div><div class="eyebrow">04 / ADVANCED</div><h2>Дополнительные параметры</h2></div><span class="panel-index">SERVER.PROPERTIES</span></div><label class="field"><span>СВОЙСТВА · ОДНО ЗНАЧЕНИЕ НА СТРОКУ, KEY=VALUE</span><textarea name="advancedProperties" rows="6" placeholder="spawn-protection=16&#10;allow-flight=false"></textarea></label><p class="form-note"><span class="note-mark">i</span> Здесь можно задать любое свойство из <code>server.properties</code>. Эти значения имеют приоритет над полями выше.</p></section>
+          <section class="panel eula-panel"><div class="eula-copy"><span class="eula-icon">!</span><div><strong>Лицензионное соглашение Minecraft</strong><p>Перед запуском ознакомься с <a href="https://aka.ms/MinecraftEULA" target="_blank" rel="noreferrer">Minecraft EULA ↗</a>. Файл eula.txt будет создан автоматически.</p></div></div><label class="eula-check"><input name="eulaAccepted" type="checkbox"><span class="check-box"></span><span>Я принимаю Minecraft EULA</span></label></section>
+          <div class="settings-submit"><span>ИЗМЕНЕНИЯ СОХРАНЯЮТСЯ ЛОКАЛЬНО</span><button class="button button-primary" type="submit"><span>↓</span> Сохранить все настройки</button></div>
+        </form>
+        <footer class="page-footer"><span>SERVER CONFIGURATION</span><span>НАСТРОЙКИ ХРАНЯТСЯ НА ЭТОМ ПК</span><span>04 / 05</span></footer>
+      </section>
+
+      <section class="view" id="view-console" data-view="console">
+        <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> LIVE OUTPUT <span class="eyebrow-index">05 / 05</span></div><h1>Консоль</h1><p class="heading-subtitle">Вывод Java и ввод команд сервера в реальном времени.</p></div><div class="console-heading-actions"><span class="console-state"><span class="status-indicator" id="console-status-dot"></span><span id="console-status-label">ОСТАНОВЛЕН</span></span><button class="button button-outline" id="clear-console" type="button">Очистить экран</button></div></div>
+        <section class="terminal-panel"><div class="terminal-top"><span class="terminal-lights"><i></i><i></i><i></i></span><span>SERVER PROCESS <b>·</b> JAVA CONSOLE</span><button id="download-log" type="button" title="Скачать журнал">↓</button></div><div class="terminal-output" id="terminal-output" role="log" aria-live="polite"><div class="terminal-empty"><span>READY_</span><p>Здесь появится вывод Java.<br>Запусти сервер, чтобы начать.</p></div></div><form class="terminal-input-row" id="command-form"><span class="terminal-prompt">›</span><input id="console-command" type="text" placeholder="Введите команду сервера..." autocomplete="off" maxlength="1000" disabled><button type="submit" disabled id="send-command">ОТПРАВИТЬ <span>↗</span></button></form></section>
+        <div class="console-footnote"><span><i class="status-indicator" id="console-foot-dot"></i> stdin / stdout / stderr</span><span>ПОСЛЕДНИЕ 500 СТРОК СЕССИИ</span></div>
+        <footer class="page-footer"><span>PROCESS CONSOLE</span><span>КОМАНДЫ ОТПРАВЛЯЮТСЯ В JAVA-ПРОЦЕСС</span><span>05 / 05</span></footer>
+      </section>
+    </main>
+  </div>
+
+  <dialog class="search-dialog" id="search-dialog">
+    <div class="dialog-top"><div><div class="eyebrow">ADDON DISCOVERY</div><h2>Каталог дополнений</h2></div><button class="icon-button" id="close-search" type="button" aria-label="Закрыть">×</button></div>
+    <div class="search-controls"><label class="field"><span>ТИП КОНТЕНТА</span><select id="search-kind"><option value="plugin">Плагины</option><option value="mod">Моды</option></select></label><label class="field"><span>ИСТОЧНИК</span><select id="search-source"><option value="modrinth">Modrinth</option><option value="curseforge">CurseForge</option></select></label></div>
+    <div class="search-controls search-filter-row"><label class="field search-query-field"><span>ПОИСК</span><div class="search-input-wrap"><span>⌕</span><input id="search-query" type="search" maxlength="120" placeholder="Название или описание..."></div></label><label class="field loader-field" id="loader-filter-wrap"><span>ЗАГРУЗЧИК</span><select id="search-loader"><option value="any">Все загрузчики</option><option value="fabric">Fabric</option><option value="forge">Forge</option><option value="neoforge">NeoForge</option><option value="quilt">Quilt</option></select></label><button class="button button-primary search-button" id="run-search" type="button">Найти <span>↗</span></button></div>
+    <div class="search-version-note"><span class="note-mark">i</span> Поиск для Minecraft <strong id="search-version">1.21.4</strong>. Останавливай сервер перед установкой.</div>
+    <div class="search-results" id="search-results"><div class="search-empty"><span>⌕</span><p>Введи название, чтобы найти дополнения.</p></div></div>
+    <div class="dialog-bottom"><span>ИСТОЧНИКИ ДОПОЛНЕНИЙ</span><span class="dialog-source-dot"></span> MODRINTH <span class="dialog-source-dot orange-dot"></span> CURSEFORGE</div>
+  </dialog>
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+</body>
+</html>
