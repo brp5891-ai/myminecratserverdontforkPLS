@@ -1,0 +1,2 @@
+# myminecratserverdontforkPLS
+Idk
